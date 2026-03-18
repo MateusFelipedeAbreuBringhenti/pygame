@@ -1,16 +1,23 @@
-🎮 Projetos - Pygame
-📚 Disciplina
+## 🎮 Projetos - Pygame
 
-Computação Gráfica e Tecnologias Imersivas (SINF7NA)
+### 📚 Disciplina
 
--------
-
-👨‍🎓 Aluno
-
-Mateus Felipe de Abreu Bringhenti
+ Computação Gráfica e Tecnologias Imersivas (SINF7NA)
 
 -------
 
-📌 Descrição
+## 👨‍🎓 Professor
 
-Este projeto consiste na implementação de códigos, desenvolvidos utilizando a biblioteca Pygame em Python.
+ Professor: Dr. Rafael Barbosa  
+
+-------
+
+## 👨‍🎓 Aluno
+
+ Mateus Felipe de Abreu Bringhenti
+
+-------
+
+## 📌 Descrição
+
+ Este projeto consiste na implementação de códigos, desenvolvidos utilizando a biblioteca Pygame em Python.
