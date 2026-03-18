@@ -10,7 +10,6 @@ BRANCO = (255, 255, 255)
 LARGURA = 800
 ALTURA = 600
 
-
 class Raquete:
     def __init__(self, x, y, largura=10, altura=60, velocidade=5):
         self.rect = pygame.Rect(x, y, largura, altura)
@@ -26,7 +25,6 @@ class Raquete:
 
     def draw(self, tela):
         pygame.draw.rect(tela, BRANCO, self.rect)
-
 
 class Bola:
     def __init__(self, tamanho=15):
@@ -48,7 +46,7 @@ class Bola:
     def draw(self, tela):
         pygame.draw.ellipse(tela, BRANCO, self.rect)
 
-class Score:
+class Pontos:
     def __init__(self):
         self.p1 = 0
         self.p2 = 0
@@ -58,8 +56,7 @@ class Score:
         text = self.font.render(f"{self.p1} - {self.p2}", True, BRANCO)
         tela.blit(text, (LARGURA // 2 - 30, 20))
 
-
-class Game:
+class Jogo:
     def __init__(self):
         self.tela = pygame.display.set_mode((LARGURA, ALTURA))
         pygame.display.set_caption("Pong")
@@ -69,7 +66,7 @@ class Game:
         self.player1 = Raquete(15, ALTURA // 2 - 30)
         self.player2 = Raquete(LARGURA - 25, ALTURA // 2 - 30)
         self.ball = Bola()
-        self.score = Score()
+        self.score = Pontos()
 
         self.dificuldade = "facil"
 
@@ -104,16 +101,16 @@ class Game:
             titulo = fonte_titulo.render("PONG", True, BRANCO)
             self.tela.blit(titulo, (LARGURA // 2 - 100, 120))
 
-            for i, opcao in enumerate(opcoes):
+            for OpcaoDeJogo, opcao in enumerate(opcoes):
                 cor = BRANCO
                 texto = fonte_opcao.render(opcao, True, cor)
 
                 x = LARGURA // 2 - 40
-                y = 280 + i * 50
+                y = 280 + OpcaoDeJogo * 50
 
                 self.tela.blit(texto, (x, y))
 
-                if i == selecionado:
+                if OpcaoDeJogo == selecionado:
                     seta = fonte_opcao.render(">", True, BRANCO)
                     self.tela.blit(seta, (x - 30, y))
 
@@ -197,7 +194,6 @@ class Game:
 
             self.clock.tick(60)
 
-
 if __name__ == "__main__":
-    jogo = Game()
+    jogo = Jogo()
     jogo.run()
