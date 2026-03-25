@@ -65,6 +65,7 @@ class Jogo:
             self.ia.atualizar()
             self.bola.atualizar()
             self.colisao.verificar()
+            self.colisao.limitar_velocidade()
             self.pontuacao.atualizar(self.bola)
 
             self.tela.fill(COR_PRETO)
