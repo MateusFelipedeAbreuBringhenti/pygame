@@ -12,19 +12,34 @@ class Jogo:
 
     def __init__(self):
         pygame.init()
+        pygame.mixer.init()
 
         self.tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
         pygame.display.set_caption("Pong v2")
 
         self.clock = pygame.time.Clock()
 
+        self.paddle_sound = pygame.mixer.Sound("sounds/fahhh_KcgAXfs.wav")
+        self.wall_sound = pygame.mixer.Sound("sounds/anime-ahh.wav")
+        self.score_sound = pygame.mixer.Sound("sounds/dexter-meme.wav")
+
+        pygame.mixer.music.load("sounds/indian-song.mp3")
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1)
+
         self.jogador1 = Raquete(15, ALTURA_TELA // 2 - 30)
         self.jogador2 = Raquete(LARGURA_TELA - 25, ALTURA_TELA // 2 - 30)
-        self.bola = Bola()
+        self.bola = Bola(wall_sound=self.wall_sound)
 
         self.input = GerenciadorInput(self.jogador1)
-        self.colisao = SistemaColisao(self.bola, [self.jogador1, self.jogador2])
-        self.pontuacao = GerenciadorPontuacao()
+        self.pontuacao = GerenciadorPontuacao(
+            score_sound=self.score_sound
+        )
+        self.colisao = SistemaColisao(
+            self.bola,
+            [self.jogador1, self.jogador2],
+            paddle_sound=self.paddle_sound
+        )
 
         self.menu = Menu(self.tela)
 
