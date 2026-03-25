@@ -3,6 +3,7 @@ import random
 class SistemaColisao:
 
     def __init__(self, bola, jogadores, paddle_sound=None):
+        self.colidiu = False
         self.bola = bola
         self.jogadores = jogadores
         self.paddle_sound = paddle_sound
@@ -12,13 +13,16 @@ class SistemaColisao:
             if self.bola.rect.colliderect(jogador.rect):
                 self.bola.vel_x *= -1
                 self.bola.vel_y = random.choice([-1, 1]) * random.uniform(2, 6)
+                
+                self.colidiu = True
+
                 if self.bola.vel_x > 0:
                     self.bola.rect.left = jogador.rect.right
                 else:
                     self.bola.rect.right = jogador.rect.left
+
                 if self.paddle_sound:
                     self.paddle_sound.play()
-
                 break
 
     def limitar_velocidade(self):

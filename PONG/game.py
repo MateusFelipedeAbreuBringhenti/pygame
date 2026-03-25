@@ -29,27 +29,29 @@ class Jogo:
 
         self.jogador1 = Raquete(15, ALTURA_TELA // 2 - 30)
         self.jogador2 = Raquete(LARGURA_TELA - 25, ALTURA_TELA // 2 - 30)
-        self.bola = Bola(wall_sound=self.wall_sound)
+
+        self.bolas = [Bola(wall_sound=self.wall_sound, verdadeira=True)]
+        self.ultimo_spawn = pygame.time.get_ticks()
 
         self.input = GerenciadorInput(self.jogador1)
-        self.pontuacao = GerenciadorPontuacao(
-            score_sound=self.score_sound
-        )
+        self.pontuacao = GerenciadorPontuacao(score_sound=self.score_sound)
+
         self.colisao = SistemaColisao(
-            self.bola,
+            None,
             [self.jogador1, self.jogador2],
             paddle_sound=self.paddle_sound
         )
 
         self.menu = Menu(self.tela)
-
         self.ia = None
 
     def configurar_dificuldade(self, dificuldade):
+        bola_principal = self.bolas[0]
+
         if dificuldade == "facil":
-            self.ia = IAController(self.jogador2, self.bola, velocidade=4, erro=30)
+            self.ia = IAController(self.jogador2, bola_principal, velocidade=4, erro=30)
         else:
-            self.ia = IAController(self.jogador2, self.bola, velocidade=7, erro=5)
+            self.ia = IAController(self.jogador2, bola_principal, velocidade=7, erro=5)
 
     def executar(self):
         dificuldade = self.menu.executar()
@@ -61,18 +63,47 @@ class Jogo:
                     pygame.quit()
                     exit()
 
+            tempo_atual = pygame.time.get_ticks()
+
             self.input.atualizar()
             self.ia.atualizar()
-            self.bola.atualizar()
-            self.colisao.verificar()
-            self.colisao.limitar_velocidade()
-            self.pontuacao.atualizar(self.bola)
 
+            for bola in self.bolas:
+                bola.atualizar()
+
+            for bola in self.bolas:
+                self.colisao.bola = bola
+                self.colisao.verificar()
+                self.colisao.limitar_velocidade()
+
+            for bola in self.bolas:
+                if bola.verdadeira:
+                    self.pontuacao.atualizar(bola)
+
+            if tempo_atual - self.ultimo_spawn >= 5000 and self.colisao.colidiu:
+
+                novas_bolas = []
+
+                for bola in self.bolas:
+                    for _ in range(4):
+                        nova = Bola(wall_sound=self.wall_sound, verdadeira=False)
+                        nova.rect.center = bola.rect.center
+                        novas_bolas.append(nova)
+
+                self.bolas.extend(novas_bolas)
+                self.colisao.colidiu = False
+                self.ultimo_spawn = tempo_atual
+
+            if len(self.bolas) > 20:
+                self.bolas = self.bolas[:20]
             self.tela.fill(COR_PRETO)
 
             self.jogador1.desenhar(self.tela)
             self.jogador2.desenhar(self.tela)
-            self.bola.desenhar(self.tela)
+
+            for bola in self.bolas:
+                bola.desenhar(self.tela)
+
             self.pontuacao.desenhar(self.tela)
 
             pygame.display.flip()
